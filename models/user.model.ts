@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: [true, "La clave esnecesaria"] },
 });
 
-export const clave = userSchema.method("compararClave", function (password: string = ""): boolean {
+ userSchema.method("compararClave", function (password: string = ""): boolean {
   if (bcrypt.compareSync(password, this.password)) {
     return true;
   } else {

@@ -37,7 +37,7 @@ userRoutes.post("/create", (req: Request, res: Response) => {
     });
 });
 
-//Login
+// Login
 userRoutes.post("/login", (req: Request, res: Response) => {
   const body = req.body;
 
