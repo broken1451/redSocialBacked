@@ -24,7 +24,7 @@ interface User extends mongoose.Document {
   nombre: string;
   avatar?: string;
   email: string;
-  password: string;
+  password: string;   
   compararClave(password: string): boolean;
 }
 

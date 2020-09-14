@@ -59,7 +59,7 @@ userRoutes.post("/login", (req: Request, res: Response) => {
       });
     }
     
-    // otra manera de comparar clave
+    // otra manera de comparar clave 
     if (user.compararClave(body.password)) {
       return res.status(200).json({
         ok: true,
