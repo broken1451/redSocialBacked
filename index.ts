@@ -6,6 +6,7 @@ import cors from 'cors';
 import mongoose from "mongoose";
 import Server from "./server/server";
 import userRoutes from "./routes/usuario";
+import postRouts from "./routes/post";
 
 // console.log('hola servidor ts');
 // console.log('Puerto: ', );
@@ -27,6 +28,7 @@ server.app.use(cors({origin: true, credentials:true}));
 
 // Rutas de la app
 server.app.use("/user", userRoutes);
+server.app.use("/posts", postRouts);
 
 
 // conect bd de mongo
