@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({ 
   nombre: { type: String, required: [true, "El nombre es necesario"] },
   avatar: { type: String, default: "av-1.png" },
   email: {

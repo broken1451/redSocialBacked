@@ -55,17 +55,14 @@ export default class FileSystem {
     //   fileNombreArchivo
     const archivo = fileNombreArchivo; //imagen es el nombre que esta en el postman
     const nombreArchivoSeperado = archivo.name.split("."); // separar en un arreglo el archivo para tener su extension
-    const extensionArchivo =
-    nombreArchivoSeperado[nombreArchivoSeperado.length - 1]; // obtener la extension del archivo, ultima posicion
+    const extensionArchivo = nombreArchivoSeperado[nombreArchivoSeperado.length - 1]; // obtener la extension del archivo, ultima posicion
 
     // Nombre unico del archivo
     const idUnico = uniqid();
     return `${idUnico}.${extensionArchivo}`;
   }
 
-
-
-  public imagenesTempToPosts(userId: string){
+  public imagenesTempToPosts(userId: string) {
     const pathTemp = path.resolve(__dirname, `../uploads/${userId}/temp`);
     const pathPosts = path.resolve(__dirname, `../uploads/${userId}/posts`);
 
@@ -78,25 +75,48 @@ export default class FileSystem {
     }
 
     const imagenesTemp = this.obtenerImgTemp(userId);
-    
+
     // mover las imagtemp a posts
     imagenesTemp.forEach((imagen) => {
-      console.log({imagen})
+      console.log({ imagen });
       // fs.renameSync(pathviejo/temporal, nuevoPath)
-      fs.renameSync(`${pathTemp}/${imagen}`,`${pathPosts}/${imagen}`);
+      fs.renameSync(`${pathTemp}/${imagen}`, `${pathPosts}/${imagen}`);
     });
 
     return imagenesTemp;
-
   }
 
-
-  private obtenerImgTemp(userId: string){
+  private obtenerImgTemp(userId: string) {
     const pathTemp = path.resolve(__dirname, `../uploads/${userId}/temp`);
 
     // leer el directorio
     return fs.readdirSync(pathTemp) || [];
   }
 
+  public getPhotoUrl(userId: string, img: string) {
+    //  crear el path post, apuntar a la carpeta post
+    const pathPhoto = path.resolve(
+      __dirname,
+      `../uploads/${userId}/posts/${img}`
+    );
 
+    // si la img existe
+    const existe = fs.existsSync(pathPhoto);
+
+    if (!existe) {
+      const pathNoImage = path.resolve(__dirname,`../assets/400x250.jpg`);
+      // fs.mkdirSync(pathNoImage);
+      return pathNoImage;
+    }
+
+    return pathPhoto;
+
+    // if (fs.existsSync(pathPhoto)) {
+    //   return pathPhoto;
+    // } else {
+    //   const pathNoImage = path.resolve(__dirname, `../assets/400x250.jpg`);
+    //   // fs.mkdirSync(pathNoImage);
+    //   return pathNoImage;
+    // }
+  }
 }

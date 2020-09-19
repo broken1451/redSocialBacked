@@ -18,7 +18,7 @@ const postSchema = new mongoose.Schema({
       true,
       "Debe de existir una referencia al usuario, campo obligatorio",
     ],
-  }, // relacion con usuarios
+  }, // relacion con usuarios 
 });
 
 // setear fecha de creacion cuando se haga una insercion en la base de datos
