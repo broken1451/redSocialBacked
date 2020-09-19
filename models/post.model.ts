@@ -5,7 +5,7 @@ import { NextFunction } from "express";
 const postSchema = new mongoose.Schema({
   created: { type: Date, default: Date.now },
   mensaje: { type: String },
-  img: [
+  imgs: [
     {
       type: String,
     },

@@ -18,6 +18,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.5",
     "mongoose-unique-validator": "^2.0.3",
+    "uniqid": "^5.2.0",
     "validator": "^13.1.1"
   },
   "devDependencies": {
@@ -28,6 +29,8 @@
     "@types/express-fileupload": "^1.1.5",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mongoose": "^5.7.36",
+    "@types/node": "^14.11.1",
+    "@types/uniqid": "^5.2.0",
     "nodemon": "^2.0.4"
   }
 }

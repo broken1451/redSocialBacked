@@ -7,4 +7,5 @@ export interface FileUpload {
   truncated: boolean;
   mimetype: string;
   md5: string;
+  mv: Function;
 }

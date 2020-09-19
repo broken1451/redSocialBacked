@@ -2,8 +2,10 @@ import { Router, Request, Response } from "express";
 import { FileUpload } from "../interfaces/file";
 import { verificaToken } from "../middlewares/auth";
 import { Post } from "../models/post.model";
+import FileSystem from '../classes/fileSystem';
 
 const postRouts = Router();
+const fileSytem = new FileSystem();
 
 // Obtener post
 postRouts.get("/", async (req: any, res: Response) => {
@@ -35,8 +37,10 @@ postRouts.post("/", verificaToken, (req: any, res: Response) => {
   const body = req.body;
   body.usuario = req.usuario._id;
 
-  Post.create(body)
-    .then(async (post) => {
+  const imagenes = fileSytem.imagenesTempToPosts(req.usuario._id);
+  body.imgs = imagenes
+
+  Post.create(body).then(async (post) => {
       //  await post.populate("usuario", '-password').execPopulate(); // relacion con la tabla usuarios en la bd, esto hace referecia y toma esta relacion q esta en el modelo
       await post.populate("usuario", "avatar nombre email ").execPopulate(); // relacion con la tabla usuarios en la bd, esto hace referecia y toma esta relacion q esta en el modelo
       return res.json({
@@ -53,8 +57,11 @@ postRouts.post("/", verificaToken, (req: any, res: Response) => {
     });
 });
 
+
+
+
 // subir archivos
-postRouts.put("/upload", [verificaToken], (req: any, res: Response) => {
+postRouts.put("/upload", [verificaToken], async (req: any, res: Response) => {
   if (!req.files) {
     return res.status(400).json({
       ok: false,
@@ -74,8 +81,7 @@ postRouts.put("/upload", [verificaToken], (req: any, res: Response) => {
   }
 
   // validar que siempre sea una imagen
-  console.log( "file.mimetype.includes(image): ",file.mimetype.includes("image")
-  );
+  console.log( "file.mimetype.includes(image): ",file.mimetype.includes("image"));
   if (!file.mimetype.includes("image")) {
     return res.status(400).json({
       ok: false,
@@ -85,11 +91,15 @@ postRouts.put("/upload", [verificaToken], (req: any, res: Response) => {
     });
   }
 
+   await fileSytem.guardarImagenTemporal(file, req.usuario._id);
+  
   return res.status(200).json({
     ok: true,
+    file,
     mensaje: "Se subio archivo",
     fileMineType: file.mimetype,
-    file: file.mimetype.includes("image"),
+    usuario: req.usuario
+    // file: file.mimetype.includes("image"),
   });
 });
 

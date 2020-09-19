@@ -19,7 +19,4 @@ export default class Server {
     start(port: number, callback: any){
         this.app.listen(port, callback);
     }
-
 }
-
-
