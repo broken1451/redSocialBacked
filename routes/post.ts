@@ -79,10 +79,7 @@ postRouts.put("/upload", [verificaToken], async (req: any, res: Response) => {
   }
 
   // validar que siempre sea una imagen
-  console.log(
-    "file.mimetype.includes(image): ",
-    file.mimetype.includes("image")
-  );
+  console.log("file.mimetype.includes(image): ", file.mimetype.includes("image"));
   if (!file.mimetype.includes("image")) {
     return res.status(400).json({
       ok: false,
