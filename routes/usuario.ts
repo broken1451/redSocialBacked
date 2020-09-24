@@ -43,7 +43,7 @@ userRoutes.post("/create", (req: Request, res: Response) => {
     .catch((err) => {
       return res.status(400).json({
         ok: false,
-        err,
+        err
       });
     });
 });
@@ -52,49 +52,57 @@ userRoutes.post("/create", (req: Request, res: Response) => {
 userRoutes.post("/login", (req: Request, res: Response) => {
   const body = req.body;
 
-  Usuario.findOne({ email: body.email }, (err, user) => {
-    if (err) {
-      return res.status(500).json({
-        ok: false,
-        mensaje: "Error al buscar usuario",
-        errors: { message: "Error no se encuentra usuario" },
-      });
-    }
+  try {
+    Usuario.findOne({ email: body.email }, (err, user) => {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: "Error al buscar usuario",
+          errors: { message: "Error no se encuentra usuario" },
+        });
+      }
+  
+      if (!user) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: "Credenciales incorrectas",
+          // errors: {message:'Error no se encuentra email: ' + body.email +  ' asociado'}
+          errors: { message: "Error no se encuentra email asociado" },
+        });
+      }
+  
+      // otra manera de comparar clave
+      if (user.compararClave(body.password)) {
+        const payload = {
+          _id: user._id,
+          nombre: user.nombre,
+          email: user.email,
+          avatar: user.avatar,
+        };
+  
+        const userToken = Token.getJwtToken(payload);
+  
+        return res.status(200).json({
+          ok: true,
+          token: userToken,
+          user: user,
+        });
+      } else {
+        return res.status(400).json({
+          ok: false,
+          mensaje: "Credenciales incorrectas",
+          // errors: {message:'Error no se encuentra email: ' + body.email +  ' asociado'}
+          errors: { message: "Error no coincide la clave" },
+        });
+      }
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: "Error de credenciales",
+    });
+  }
 
-    if (!user) {
-      return res.status(400).json({
-        ok: false,
-        mensaje: "Credenciales incorrectas",
-        // errors: {message:'Error no se encuentra email: ' + body.email +  ' asociado'}
-        errors: { message: "Error no se encuentra email asociado" },
-      });
-    }
 
-    // otra manera de comparar clave
-    if (user.compararClave(body.password)) {
-      const payload = {
-        _id: user._id,
-        nombre: user.nombre,
-        email: user.email,
-        avatar: user.avatar,
-      };
-
-      const userToken = Token.getJwtToken(payload);
-
-      return res.status(200).json({
-        ok: true,
-        token: userToken,
-        user: user,
-      });
-    } else {
-      return res.status(400).json({
-        ok: false,
-        mensaje: "Credenciales incorrectas",
-        // errors: {message:'Error no se encuentra email: ' + body.email +  ' asociado'}
-        errors: { message: "Error no coincide la clave" },
-      });
-    }
-  });
 });
 
 userRoutes.put("/update", [verificaToken], (req: any, res: Response) => {

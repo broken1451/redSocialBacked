@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import uniqueValidator from 'mongoose-unique-validator';
 
 const userSchema = new mongoose.Schema({ 
-  nombre: { type: String, required: [true, "El nombre es necesario"] },
+  nombre: { type: String, required: [true, "El nombre es necesario y unico"] },
   avatar: { type: String, default: "av-1.png" },
   email: {
     type: String,
@@ -28,5 +29,7 @@ interface User extends mongoose.Document {
   compararClave(password: string): boolean;
 }
 
+// usuarioSchema.plugin(uniqueValidator, {message:'{PATH} debe ser unico'})
+userSchema.plugin(uniqueValidator,{message:'{PATH} debe ser unico'} )
 
 export const Usuario = mongoose.model<User>("Usuario", userSchema);
